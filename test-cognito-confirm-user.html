@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" name="name" id="name"/>
+	<input type="text" name="confirmnum" id="confirmnum"/>
+	<div id="confirm">確定</div>
+	<script src="./javascripts/jsbn.js"></script>
+    <script src="./javascripts/jsbn2.js"></script>
+    <script src="./node_modules/sjcl-codec/sjcl.js"></script>
+    <script src="./javascripts/moment.js"></script>
+    <script src="./javascripts/aws-cognito-sdk.min.js"></script>
+    <script src="./javascripts/amazon-cognito-identity.min.js"></script>
+	<script src="./javascripts/aws-sdk-2.5.5.min.js"></script>
+	<script>
+		AWSCognito.config.region = 'ap-northeast-1'; //This is required to derive the endpoint
+        
+	    var poolData = {
+	        UserPoolId : '',
+	        ClientId : ''
+	    };
+
+	    var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+	   
+
+	    document.getElementById('confirm').addEventListener('click',function(){
+	    	var name = 	document.getElementById('name').value;
+			var confirmnum = document.getElementById('confirmnum').value;
+	    	var userData = {
+		        Username : name,
+		        Pool : userPool
+		    };
+		    var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+		    cognitoUser.confirmRegistration(confirmnum, true, function(err, result) {
+		        if (err) {
+		            alert(err);
+		            return;
+		        }
+		        console.log('call result: ' + result);
+		    });
+	    	
+	    });
+
+	    
+	    
+	</script>
+</body>
+</html>

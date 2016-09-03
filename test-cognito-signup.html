@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" name="name" id="name"/>
+	<input type="password" name="password" id="password"/>
+	<div id="confirm">確定</div>
+	<script src="./javascripts/jsbn.js"></script>
+    <script src="./javascripts/jsbn2.js"></script>
+    <script src="./node_modules/sjcl-codec/sjcl.js"></script>
+    <script src="./javascripts/moment.js"></script>
+    <script src="./javascripts/aws-cognito-sdk.min.js"></script>
+    <script src="./javascripts/amazon-cognito-identity.min.js"></script>
+	<script src="./javascripts/aws-sdk-2.5.5.min.js"></script>
+	<script>
+		AWSCognito.config.region = 'ap-northeast-1'; //This is required to derive the endpoint
+        
+	    var poolData = { UserPoolId : '',
+	        ClientId : ''
+	    };
+	    var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+
+	    var attributeList = [];
+	    
+	    var dataEmail = {
+	        Name : 'email',
+	        Value : ''
+	    };
+	    // var dataPhoneNumber = {
+	    //     Name : 'phone_number',
+	    //     Value : '525252'
+	    // };
+	    var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail);
+	    // var attributePhoneNumber = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataPhoneNumber);
+
+	    attributeList.push(attributeEmail);
+	    // attributeList.push(attributePhoneNumber);
+
+	    document.getElementById('confirm').addEventListener('click',function(){
+	    	var password = 	document.getElementById('password').value;
+	    	var name = 	document.getElementById('name').value;
+	    	console.log(name,password)
+	    	userPool.signUp(name, password, attributeList, null, function(err, result){
+		        if (err) {
+		            alert(err);
+		            return;
+		        }
+		        console.log(result);
+		        cognitoUser = result.user;
+		        console.log('user name is ' + cognitoUser.getUsername());
+		    });
+	    })
+
+	    
+	</script>
+</body>
+</html>
